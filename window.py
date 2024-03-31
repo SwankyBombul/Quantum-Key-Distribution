@@ -49,10 +49,8 @@ class Window(Tk):
             setup_image = Image.open("Eve_absent.png")
 
         self.canvas.delete("all")
-        setup = ImageTk.PhotoImage(setup_image)
-        print(1)
-        self.canvas.create_image(100, 100, image=setup)
-        self.canvas.grid(row=4, column=2)
+        self.setup_image_tk = ImageTk.PhotoImage(setup_image)  # Keep a reference to the image object
+        self.canvas.create_image(100, 100, image=self.setup_image_tk)
 
     def start_simulation(self):
         length = int(self.length_input.get())
@@ -81,6 +79,6 @@ class Window(Tk):
             alice.send_to_channel(channel_one)
             bob.receive_from_channel(channel_one)
 
-        bob.adjust_bases(alice, eve)
+        bob.adjust_bases(alice)
         report = bob.compare_keys(alice)
         self.statistics.config(text="Statistics\n" + report)

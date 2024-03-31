@@ -1,4 +1,6 @@
 # from qrng import *
+import random
+
 from randomese import *
 from qubit import Qubit
 
@@ -39,21 +41,23 @@ class Human:
         self.length = len(self.bases)
 
     def receive_from_channel(self, channel):
-        for n in range(0,self.length):
-            self.qubits.append(Qubit(self.bases[n], xor(channel.message[n], self.bases[n])))
-            self.key.append(self.qubits[n].bit)
-        #self.qubits = [Qubit(self.bases[n], xor(channel.message[n], self.bases[n])) for n in range(0, self.length)]
-        print(channel.message)
+        for n in range(0, self.length):
+            if self.bases[n] == channel.message[n].base:
+                self.key.append(xor(channel.message[n].bit, self.bases[n]))
+            else:
+                self.key.append(random.choice([0, 1]))
+            self.qubits.append(Qubit(self.bases[n], self.key[n]))
+        # self.qubits = [Qubit(self.bases[n], xor(channel.message[n], self.bases[n])) for n in range(0, self.length)]
 
     def send_to_channel(self, channel):
-        channel.message = [xor(single_qubit.base, single_qubit.bit) for single_qubit in self.qubits]
+        channel.message = [Qubit(single_qubit.base, xor(single_qubit.base, single_qubit.bit)) for single_qubit in
+                           self.qubits]
         channel.message_length = self.length
 
-    def adjust_bases(self, sender, eve):
+    def adjust_bases(self, sender):
         self.key = []
         sender.key = []
         for n in range(0, self.length):
-            print(self.qubits[n].state, sender.qubits[n].state, eve.qubits[n].state)
             if self.qubits[n].base == sender.qubits[n].base:
                 self.key.append(self.qubits[n].bit)
                 sender.key.append(sender.qubits[n].bit)
@@ -67,5 +71,4 @@ class Human:
             if qubit == sender.key[n]:
                 aligned_qubits += 1
                 n += 1
-        print(aligned_qubits)
-        return f"Percent of well-aligned qubits: {aligned_qubits/key_length*100}%"
+        return f"Percent of well-aligned qubits: {round((aligned_qubits/key_length*100))}%"
