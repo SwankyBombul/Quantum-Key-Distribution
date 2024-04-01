@@ -53,6 +53,7 @@ class Human:
         channel.message = [Qubit(single_qubit.base, xor(single_qubit.base, single_qubit.bit)) for single_qubit in
                            self.qubits]
         channel.message_length = self.length
+        channel.generate_errors()
 
     def adjust_bases(self, sender):
         self.key = []
@@ -67,7 +68,6 @@ class Human:
         aligned_qubits = 0
         n = 0
         for qubit in self.key:
-            print(qubit, sender.qubits[n].state)
             if qubit == sender.key[n]:
                 aligned_qubits += 1
                 n += 1

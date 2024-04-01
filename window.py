@@ -18,6 +18,12 @@ class Window(Tk):
 
         self.checkbox_var = IntVar()
 
+        self.scale_slider_one = Scale(orient="horizontal", from_=0, to=20, label="Channel 1 error [%]")
+        self.scale_slider_one.grid(row=4, column=5)
+        self.scale_slider_two = Scale(orient="horizontal", from_=0, to=20, label="Channel 2 error [%]",
+                                      state="disabled")
+        self.scale_slider_two.grid(row=4, column=6)
+
         self.eavesdropper_checkbox = Checkbutton(text="Eve present", variable=self.checkbox_var, onvalue=True,
                                                  offvalue=False,
                                                  command=self.display_setup)
@@ -31,10 +37,6 @@ class Window(Tk):
 
         # choices = ["50%", "25%", "12.5%", "6.25%", "3.12%"]
         # choicesvar = StringVar(value=choices)
-        # self.listbox_one = Listbox(listvariable=choicesvar)
-        # self.listbox_one.grid(row=2, column=0)
-        # self.listbox_two = Listbox(listvariable=choicesvar)
-        # self.listbox_two.grid(row=2, column=1)
 
         self.start_button = Button(text="START", command=self.start_simulation)
         self.start_button.grid(row=3, column=0)
@@ -44,8 +46,11 @@ class Window(Tk):
 
     def display_setup(self):
         if self.checkbox_var.get() == 1:
+            self.scale_slider_two.config(state="active")
             setup_image = Image.open("Eve_present.png")
         else:
+            self.scale_slider_two.set(0)
+            self.scale_slider_two.config(state="disabled")
             setup_image = Image.open("Eve_absent.png")
 
         self.canvas.delete("all")
@@ -59,7 +64,7 @@ class Window(Tk):
         bob.create_bases(length)
         alice.create_key_and_bases(length)
 
-        error_rate1 = 0  # self.error_table[self.listbox_one.get(0)]
+        error_rate1 = self.scale_slider_one.get()
 
         channel_one = Channel(error_rate=error_rate1)
 
@@ -67,7 +72,7 @@ class Window(Tk):
             eve = Human(character="evil")
             eve.create_bases(length)
 
-            error_rate2 = 0  # self.error_table[self.listbox_two.get(0)]
+            error_rate2 = self.scale_slider_two.get()  # self.error_table[self.listbox_two.get(0)]
             channel_two = Channel(error_rate=error_rate2)
 
             alice.send_to_channel(channel_one)
