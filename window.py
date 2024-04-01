@@ -58,7 +58,7 @@ class Window(Tk):
             "Comic Sans MS", 16), offvalue=False, padx=40, pady=20, command=self.display_setup)
         self.eavesdropper_checkbox.grid(row=1, column=0)
         self.eavesdropper_label = Label(font=("Comic Sans MS", 16), padx=40, pady=20)
-        self.change_eavesdropper_status()
+        self.display_setup()
         self.eavesdropper_label.grid(row=1, column=1)
 
         # Configuring and placing the entry box for the number of qubits used in the simulation.
