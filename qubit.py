@@ -3,6 +3,8 @@ from randomese import read_single_bit
 
 class Qubit:
     def __init__(self, *args):
+        """Creates a single qubit with attributes: base: int, bit: int and state: (base: int, bit: int). If two
+        parameters are given base=args[0], bit=arg[1]. If no parameters are given the values are random"""
         if len(args) != 0:
             self.state = (args[0], args[1])
         else:

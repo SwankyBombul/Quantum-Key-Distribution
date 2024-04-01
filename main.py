@@ -1,13 +1,6 @@
 from window import Window
-from tkinter import Canvas
 
-canvas_instance = Canvas
-
-bit_position = 0
-
+# Initiating the Window class. All necessary values and widgets are configured inside the Window class.
 window = Window()
-
-
-file_path = "QNGFFile.dat"
 
 window.mainloop()
